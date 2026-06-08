@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://bv8ki05bda1uu"]
+
+[ext_resource type="AudioStream" uid="uid://pvuc8o2obdwj" path="res://Music/SoundEffect/戳一下.wav" id="1_3m4c2"]
+[ext_resource type="Script" path="res://Music/Sound_effect.cs" id="1_y1gp8"]
+[ext_resource type="AudioStream" uid="uid://ch4obppni16ge" path="res://Music/SoundEffect/信赖触摸.wav" id="2_7ur1m"]
+[ext_resource type="AudioStream" uid="uid://d3s4uouxqbd02" path="res://Music/SoundEffect/交谈1.wav" id="3_8bhun"]
+[ext_resource type="AudioStream" uid="uid://cw8n2kga153g" path="res://Music/SoundEffect/交谈2.wav" id="4_gq77c"]
+[ext_resource type="AudioStream" uid="uid://yt254tbo7jrv" path="res://Music/SoundEffect/交谈3.wav" id="5_rbufp"]
+[ext_resource type="AudioStream" uid="uid://cj42qblh884ly" path="res://Music/SoundEffect/信赖提升后交谈3.wav" id="6_e6ewn"]
+
+[node name="Sound_Effect" type="Node" node_paths=PackedStringArray("touch", "Relax")]
+script = ExtResource("1_y1gp8")
+touch = NodePath("SoundEffect/Touch")
+Relax = NodePath("SoundEffect/Relax")
+
+[node name="SoundEffect" type="Node" parent="."]
+
+[node name="Relax" type="Node" parent="SoundEffect"]
+
+[node name="talk_1" type="AudioStreamPlayer" parent="SoundEffect/Relax"]
+stream = ExtResource("3_8bhun")
+
+[node name="talk_2" type="AudioStreamPlayer" parent="SoundEffect/Relax"]
+stream = ExtResource("4_gq77c")
+
+[node name="talk_3" type="AudioStreamPlayer" parent="SoundEffect/Relax"]
+stream = ExtResource("5_rbufp")
+
+[node name="talk_improve_3" type="AudioStreamPlayer" parent="SoundEffect/Relax"]
+stream = ExtResource("6_e6ewn")
+max_polyphony = 4
+
+[node name="Touch" type="Node" parent="SoundEffect"]
+
+[node name="touch_" type="AudioStreamPlayer" parent="SoundEffect/Touch"]
+stream = ExtResource("2_7ur1m")
+
+[node name="touch_1" type="AudioStreamPlayer" parent="SoundEffect/Touch"]
+stream = ExtResource("1_3m4c2")

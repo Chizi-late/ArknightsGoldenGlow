@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=3 uid="uid://0j7y3h18ylsw"]
+
+[ext_resource type="Texture2D" uid="uid://bk1qdlpv7lxm7" path="res://icon.svg" id="1_2g6wh"]
+[ext_resource type="Script" path="res://Body.cs" id="1_rb57h"]
+[ext_resource type="Script" path="res://State/StateMachine.cs" id="3_5kp2p"]
+[ext_resource type="SpriteFrames" uid="uid://cj40tcm286l4o" path="res://Pic/Build/animation.tres" id="3_ltaw1"]
+[ext_resource type="Script" path="res://animationcs.cs" id="4_15dft"]
+[ext_resource type="Script" path="res://State/Walk.cs" id="4_l7iap"]
+[ext_resource type="Script" path="res://State/Drag.cs" id="5_56yxe"]
+[ext_resource type="Script" path="res://State/Idle.cs" id="6_bp03e"]
+[ext_resource type="PackedScene" uid="uid://bv8ki05bda1uu" path="res://Music/sound_effect.tscn" id="10_3ek4q"]
+[ext_resource type="Script" path="res://State/Interact.cs" id="351_3sn6j"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6g524"]
+radius = 28.0179
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gjtj2"]
+radius = 34.0588
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("stateMachine", "randomTimer", "randomTimerSoundEffect", "sound_Effect")]
+position = Vector2(-4, -3)
+script = ExtResource("1_rb57h")
+stateMachine = NodePath("StateMachine")
+randomTimer = NodePath("Random")
+randomTimerSoundEffect = NodePath("SoundEffect")
+sound_Effect = NodePath("Sound_Effect")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+
+[node name="SoundEffect" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="Random" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(33, 26)
+texture = ExtResource("1_2g6wh")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Marker2D"]
+position = Vector2(-7, 1)
+scale = Vector2(0.125, 0.125)
+sprite_frames = ExtResource("3_ltaw1")
+animation = &"Relax"
+script = ExtResource("4_15dft")
+
+[node name="Body" type="Area2D" parent="Marker2D"]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Marker2D/Body"]
+position = Vector2(3, 14)
+shape = SubResource("CircleShape2D_6g524")
+
+[node name="Head" type="Area2D" parent="Marker2D"]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Marker2D/Head"]
+position = Vector2(7, -54)
+shape = SubResource("CircleShape2D_gjtj2")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("startingState")]
+script = ExtResource("3_5kp2p")
+startingState = NodePath("Idle")
+
+[node name="Walk" type="Node" parent="StateMachine" node_paths=PackedStringArray("animatedSprite2D", "marker2D")]
+script = ExtResource("4_l7iap")
+animatedSprite2D = NodePath("../../Marker2D/AnimatedSprite2D")
+marker2D = NodePath("../../Marker2D")
+
+[node name="Drag" type="Node" parent="StateMachine" node_paths=PackedStringArray("body")]
+script = ExtResource("5_56yxe")
+body = NodePath("../..")
+
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("animatedSprite2D")]
+script = ExtResource("6_bp03e")
+animatedSprite2D = NodePath("../../Marker2D/AnimatedSprite2D")
+
+[node name="Interact" type="Node" parent="StateMachine" node_paths=PackedStringArray("animatedSprite2D", "sound_Manage")]
+script = ExtResource("351_3sn6j")
+animatedSprite2D = NodePath("../../Marker2D/AnimatedSprite2D")
+sound_Manage = NodePath("../../Sound_Effect")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Sound_Effect" parent="." instance=ExtResource("10_3ek4q")]
+
+[connection signal="input_event" from="Marker2D/Body" to="." method="MouseClickDrag"]
+[connection signal="input_event" from="Marker2D/Head" to="." method="MouseClickInteract"]
